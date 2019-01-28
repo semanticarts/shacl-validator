@@ -15,11 +15,11 @@ Node.js SHACL Valdiator
 | *-e*, *--endpoint* _URL_    | The URL for a SPARQL endpoint used to access named graphs or run queries.     
 |                       |   Must be specified unless local files are used for both data and shapes.       
 |  *-s*, *--shapes* _location_ |   The location of the SHACL shapes. If specified as _@file_, shapes will be read  
-|                         | from a local Turtle file. If specified as  _<graph>_, the named graph will be   
+|                         | from a local Turtle file. If specified as  _\<graph>_, the named graph will be   
 |                         | retrieved from the SPARQL endpoint. Otherwise, the actual argument is         
 |                         | interpreted as Turtle shapes.                                                 
 |  *-d*, *--data* _location_  |   The location of the data to be validated. If specified as _@file_, data will be 
-|                       |   read from a local Turtle file. If specified as  _<graph>_, the named graph      
+|                       |   read from a local Turtle file. If specified as  _\<graph>_, the named graph      
 |                       |   will be retrieved from the SPARQL endpoint. Otherwise, the actual argument is 
 |                       |   interpreted as Turtle data. Cannot be specified if *--query* is provided.       
 |  *-q*, *--query* _query_    |   Query to retrieve the data to be validated. If specified as _@file_, query will 
