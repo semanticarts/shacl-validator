@@ -1,0 +1,29 @@
+{
+  "name": "shacl-validator",
+  "version": "0.0.1",
+  "description": "Use SHACL-JS Validator with a RDF store or local files",
+  "repository": "github:semanticarts/shacl-validator",
+  "bin": {
+    "validate-shacl": "src/validate.js"
+  },
+  "scripts":  {
+    "validate-shacl": "src/validate.js"
+  },
+  "author": "Boris Pelakh <boris.pelakh@topquadrant.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "shacl-js": "0.0.1",
+    "then-request": "6.0.0",
+    "command-line-args": "5.0.2",
+    "command-line-usage": "5.0.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-cli": "^1.4.0",
+    "gulp-nodeunit": "^0.1.0",
+    "gulp-serve": "^1.4.0",
+    "http-browserify": "^1.7.0",
+    "nodeunit": "^0.11.1"
+  }
+}

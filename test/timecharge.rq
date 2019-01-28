@@ -1,0 +1,22 @@
+PREFIX  sa:   <http://ontologies.semanticarts.com/SemArts#>
+PREFIX  gist: <http://ontologies.semanticarts.com/gist#>
+
+CONSTRUCT 
+  { 
+    ?tc ?p ?o .
+    ?o <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?oClass .
+  }
+WHERE
+  { { SELECT  ?tc
+      WHERE
+        { ?tc   a                     sa:TimeCharge ;
+                gist:directPartOf     [
+                    a                     sa:WorkWeek ;
+                    gist:plannedStart     ?start ]
+          FILTER ( ( month(?start) = 12 ) && ( year(?start) = 2018 ) )
+        }
+    }
+    ?tc  ?p  ?o
+    OPTIONAL
+      { ?o  a                     ?oClass }
+  }
