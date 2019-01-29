@@ -1,0 +1,40 @@
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+  	[
+		a sh:ValidationResult ;
+		sh:resultSeverity ?severity ;
+		sh:focusNode ?focus ;
+		sh:resultPath ?path ;
+		sh:value ?value ;
+		sh:resultMessage ?message ;
+		sh:sourceConstraintComponent ?component ;
+		sh:sourceShape ?shape ;
+	]
+  }
+where {
+  ?shape a sh:NodeShape .
+  FILTER NOT EXISTS { ?shape sh:deactivated true }
+
+  ?shape
+	sh:targetClass ?targetClass ;
+    sh:property ?propShape .
+    ?propShape
+      sh:path ?path ;
+      sh:minCount ?min  .
+  
+  OPTIONAL { ?propShape sh:severity ?propSeverity }
+
+  {
+    select ?focus ?targetClass ?path (count(?pathVal) as ?value)
+                  where {
+                    ?focus a ?targetClass;
+                             ?path ?pathVal .
+                  } group by ?focus ?targetClass ?path
+  }
+  FILTER(?value < ?min)
+
+  BIND(CONCAT('MinCount violated for ', STR(?path), ': ', STR(?value)) as ?message)
+  BIND(<validation:MinCount> as ?component)
+  BIND(COALESCE(?propSeverity, sh:Violation) as ?severity)
+}

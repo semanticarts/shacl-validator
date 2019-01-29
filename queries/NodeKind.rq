@@ -1,0 +1,32 @@
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+  	[
+		a sh:ValidationResult ;
+		sh:resultSeverity sh:Violation ;
+		sh:focusNode ?focus ;
+		sh:resultPath ?path ;
+		sh:value ?value ;
+		sh:resultMessage ?message ;
+		sh:sourceConstraintComponent ?component ;
+		sh:sourceShape ?shape ;
+	]
+  }
+where {
+  ?shape a sh:NodeShape .
+  FILTER NOT EXISTS { ?shape sh:deactivated true }
+
+  ?shape
+	sh:targetClass ?targetClass ;
+    sh:property [
+      sh:path ?path ;
+      sh:nodeKind ?nodeKind ] .
+           
+  ?focus a ?targetClass;
+           ?path ?value .
+  FILTER ((isIRI(?value) && ?nodeKind IN ( sh:IRI, sh:BlankNodeOrIRI, sh:IRIOrLiteral ) ) ||
+          (isLiteral(?value) && ?nodeKind IN ( sh:Literal, sh:BlankNodeOrLiteral, sh:IRIOrLiteral ) ) ||
+          (isBlank(?value)   && ?nodeKind IN ( sh:BlankNode, sh:BlankNodeOrIRI, sh:BlankNodeOrLiteral ) )) .
+  BIND(CONCAT('Value ', STR(?value), ' is not of node type ', STR(?nodeKind)) as ?message)
+  BIND(<validation:NodeKind> as ?component)
+}

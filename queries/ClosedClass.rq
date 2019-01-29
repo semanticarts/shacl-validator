@@ -1,0 +1,32 @@
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+  	[
+		a sh:ValidationResult ;
+		sh:resultSeverity sh:Violation ;
+		sh:focusNode ?focus ;
+		sh:resultPath ?path ;
+		sh:value ?value ;
+		sh:resultMessage ?message ;
+		sh:sourceConstraintComponent ?component ;
+		sh:sourceShape ?shape ;
+	]
+  }
+where {
+  ?shape a sh:NodeShape .
+  FILTER NOT EXISTS { ?shape sh:deactivated true }
+
+  ?shape
+	sh:closed true ;
+	sh:targetClass ?targetClass .
+  ?focus a ?targetClass;
+           ?path ?value .
+  FILTER NOT EXISTS {
+    ?shape sh:property/sh:path ?path
+  }
+  FILTER NOT EXISTS {
+    ?shape sh:ignoredProperties/rdf:rest*/rdf:first ?path
+  }
+  BIND(CONCAT('Invalid property ', STR(?path), ' for closed class ', STR(?targetClass)) as ?message)
+  BIND(<validation:ClosedClass> as ?component)
+}

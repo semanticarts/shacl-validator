@@ -1,0 +1,34 @@
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+  	[
+		a sh:ValidationResult ;
+		sh:resultSeverity ?severity ;
+		sh:focusNode ?focus ;
+		sh:resultPath ?path ;
+		sh:value ?value ;
+		sh:resultMessage ?message ;
+		sh:sourceConstraintComponent ?component ;
+		sh:sourceShape ?shape ;
+	]
+  }
+where {
+  ?shape a sh:NodeShape .
+  FILTER NOT EXISTS { ?shape sh:deactivated true }
+
+  ?shape
+	sh:targetClass ?targetClass ;
+    sh:property ?propShape .
+    ?propShape
+      sh:path ?path ;
+      sh:datatype ?dataType .
+           
+  OPTIONAL { ?propShape sh:severity ?propSeverity }
+
+  ?focus a ?targetClass;
+           ?path ?value .
+  FILTER (datatype(?value) != ?dataType) .
+  BIND(CONCAT('Value ', STR(?value), ' is ', STR(datatype(?value)), ' instead of ', STR(?dataType)) as ?message)
+  BIND(<validation:PropertyDatatype> as ?component)
+  BIND(COALESCE(?propSeverity, sh:Violation) as ?severity)
+}
